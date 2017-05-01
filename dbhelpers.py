@@ -13,15 +13,32 @@ def initialize_db():
     address TEXT,
     link TEXT,
     image TEXT,
-    geodata TEXT)''')
+    meters_walk_to_ov INTEGER,
+    time_walk_to_ov INTEGER)''')
     db.commit()
     db.close()
 
 
 def insert_house(price, address, url, image):
-
     db = sqlite3.connect("daftinfo.sqlite")
     cur = db.cursor()
     cur.execute("""INSERT INTO Houses (price, address, link, image) VALUES (?,?,?,?)""", (price, address, url, image))
     db.commit()
     db.close()
+
+def update_house(id, distance, duration):
+    db = sqlite3.connect("daftinfo.sqlite")
+    cur = db.cursor()
+    cur.execute("""UPDATE Houses SET meters_walk_to_ov = ?, time_walk_to_ov = ? WHERE id = ?""", (distance, duration, id))
+    db.commit()
+    db.close()
+
+def get_addresses():
+    db = sqlite3.connect("daftinfo.sqlite")
+    cur = db.cursor()
+    cur.execute('''SELECT address, id FROM Houses''')
+    addresses = cur.fetchall()
+    db.commit()
+    db.close()
+    return addresses
+

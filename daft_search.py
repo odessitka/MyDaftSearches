@@ -1,4 +1,4 @@
-import urllib, re, sqlite3
+import urllib, re, sqlite3, googlemaps
 from bs4 import BeautifulSoup
 import dbhelpers
 import maps
@@ -21,18 +21,16 @@ for box in boxes:
     address_full = ad_a.text
     add = address_full.split("-")
     address = add[0].strip()
-    url = ("http://www.daft.ie"+ad_a.get("href"))
+    url = ('http://www.daft.ie' + ad_a.get("href"))
     get_image = box.find("img")
     image =  get_image.get("data-original")
     price = box.find("strong", "price").text
+
     dbhelpers.insert_house(price, address, url, image)
 
-# db = sqlite3.connect("daftinfo.sqlite")
-# cur = db.cursor()
-# cur.execute('''
-# SELECT address FROM Houses
-# ''')
-# list_of_addresses = cur.fetchall
-# print(list_of_addresses)
+addresses = dbhelpers.get_addresses()
 
-# maps.get_distance()
+for (address, id) in addresses:
+    matrix = maps.CommuteMatrix(address, "oneview, blackrock")
+    dbhelpers.update_house(id, matrix.distance, matrix.duration)
+
