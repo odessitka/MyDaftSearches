@@ -25,31 +25,15 @@ boxes = soup_of_search.find_all('div', "box")
 #if len(boxes) > 0:
 
 for box in boxes:
-    # print(type(box))
-    #print(box)
     ad_a = box.find("a")
     address_full = ad_a.text
     add = address_full.split("-")
     address = add[0].strip()
-    #print(address)
     url = ("http://www.daft.ie"+ad_a.get("href"))
-    #
-    # print(url)
     get_image = box.find("img")
     image =  get_image.get("data-original")
     price = box.find("strong", "price").text
-    #print(address, url, image, price)
     cur.execute("""INSERT INTO Houses (price, address, link, image) VALUES (?,?,?,?)""", (price, address, url, image))
     conn.commit()
-#(price, address, url, image))
 
-#Use Google API for location
-serviceurl = "http://maps.googleapis.com/maps/api/geocode/json?"
-scontext = None
-address = "31 Willowfield, Sandymount, Dublin 4"
-url = serviceurl + urllib.parse.urlencode({"sensor": "false", "address": address})
-print('Retrieving', url)
-uh = urllib.request.urlopen(url, context=scontext)
-data = uh.read()
-print(data)
-#print('Retrieved', len(data), 'characters')
+
