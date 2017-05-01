@@ -2,7 +2,7 @@ import urllib, re, sqlite3, googlemaps
 from bs4 import BeautifulSoup
 import dbhelpers
 import maps
-
+import webbrowser
 
 #Create a database and a table Houses
 dbhelpers.initialize_db()
@@ -34,3 +34,25 @@ for (address, id) in addresses:
     matrix = maps.CommuteMatrix(address, "oneview, blackrock")
     dbhelpers.update_house(id, matrix.distance, matrix.duration)
 
+
+import os
+
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+f = open(dir_path + '\\report.html', 'w')
+
+message = """<html>
+<head></head>
+<body>"""
+
+for (address, id) in addresses:
+    message += "<p>" + address + "</p>"
+message += """</body>
+</html>"""
+
+f.write(message)
+f.close()
+
+filename = dir_path + '\\report.html'
+webbrowser.open_new_tab(filename)
