@@ -1,5 +1,7 @@
+.idea
+*.sqlite
+
 __pycache__/
 *.py[cod]
 *$py.class
-.idea
-daftinfo.sqlite
+
