@@ -57,7 +57,8 @@ f = open(dir_path + '\\report.html', 'w')
 message = """<html>
 <head></head>
 <body>
-<table border = "1">
+<h1> Houses close to Oneview Healthcare </h1>
+<table border="1" width=90%>
 <tr><th>Time</th><th>Address</th><th>Price</th><th>Link</th></tr>"""
 for table in tables:
     message += "<tr><td>" + str(table[0]) + "</td><td>" + table[1] + "</td><td>" + table[2] + "</td><td>" + table[3] + "</td></tr>"
