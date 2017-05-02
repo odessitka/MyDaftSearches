@@ -37,6 +37,18 @@ for (address, id) in addresses:
 
 import os
 
+db = sqlite3.connect("daftinfo.sqlite")
+cur = db.cursor()
+cur.execute("""SELECT time_walk_to_ov, address, price, link FROM Houses ORDER BY time_walk_to_ov""")
+tables = cur.fetchall()
+#print(tables)
+
+    #print(table)
+    #print(type(table))
+    # print(table[0])
+    # print(table[1])
+db.commit()
+db.close()
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -44,11 +56,14 @@ f = open(dir_path + '\\report.html', 'w')
 
 message = """<html>
 <head></head>
-<body>"""
+<body>
+<table border = "1">
+<tr><th>Time</th><th>Address</th><th>Price</th><th>Link</th></tr>"""
+for table in tables:
+    message += "<tr><td>" + str(table[0]) + "</td><td>" + table[1] + "</td><td>" + table[2] + "</td><td>" + table[3] + "</td></tr>"
 
-for (address, id) in addresses:
-    message += "<p>" + address + "</p>"
-message += """</body>
+message += """</table>
+</body>
 </html>"""
 
 f.write(message)
@@ -56,3 +71,4 @@ f.close()
 
 filename = dir_path + '\\report.html'
 webbrowser.open_new_tab(filename)
+
