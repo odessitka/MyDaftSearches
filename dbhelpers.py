@@ -42,3 +42,11 @@ def get_addresses():
     db.close()
     return addresses
 
+def get_houses():
+    db = sqlite3.connect("daftinfo.sqlite")
+    cur = db.cursor()
+    cur.execute("""SELECT time_walk_to_ov, address, price, link FROM Houses ORDER BY time_walk_to_ov""")
+    houses = cur.fetchall()
+    db.commit()
+    db.close()
+    return houses
