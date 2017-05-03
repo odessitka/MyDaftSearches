@@ -41,15 +41,16 @@ def extract_and_insert():
     boxes = soup_of_search.find_all('div', "box")
     # if len(boxes) > 0:
     for box in boxes:
-        ad_a = box.find("a")
-        address_full = ad_a.text
-        add = address_full.split("-")
-        address = add[0].strip()
-        url = ('http://www.daft.ie' + ad_a.get("href"))
-        get_image = box.find("img")
-        image = get_image.get("data-original")
-        price = box.find("strong", "price").text
-        dbhelpers.insert_house(price, address, url, image)
+        house = maps.DetailsHouse(box)
+        # ad_a = box.find("a")
+        # address_full = ad_a.text
+        # add = address_full.split("-")
+        # address = add[0].strip()
+        # url = ('http://www.daft.ie' + ad_a.get("href"))
+        # get_image = box.find("img")
+        # image = get_image.get("data-original")
+        # price = box.find("strong", "price").text
+        dbhelpers.insert_house(house.price, house.address, house.url, house.image)
 
 
 def compose_html(houses):

@@ -22,3 +22,31 @@ class CommuteMatrix:
     @property
     def duration(self):
         return self.__duration
+
+
+class DetailsHouse:
+    def __init__(self, box):
+        ad_a = box.find("a")
+        address_full = ad_a.text
+        add = address_full.split("-")
+        self.__address = add[0].strip()
+        self.__url = ('http://www.daft.ie' + ad_a.get("href"))
+        get_image = box.find("img")
+        self.__image = get_image.get("data-original")
+        self.__price = box.find("strong", "price").text
+
+    @property
+    def address(self):
+        return self.__address
+
+    @property
+    def url(self):
+        return self.__url
+
+    @property
+    def image(self):
+        return self.__image
+
+    @property
+    def price(self):
+        return self.__price
