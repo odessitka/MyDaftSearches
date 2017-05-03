@@ -1,17 +1,11 @@
 import googlemaps
 
 
-def get_distance_duration_matrix(destination_address, origin_address):
-    gmaps = googlemaps.Client(key='AIzaSyCpqCdiOg69YK9-tf2YOPLXRVXGxPuabPk')
-    matrix = gmaps.distance_matrix(origin_address, destination_address, transit_mode="walking")
-    return matrix["rows"][0]["elements"][0]["distance"]["value"], matrix["rows"][0]["elements"][0]["duration"]["value"]
-
-
-
-
 class CommuteMatrix:
     def __init__(self, destination_address, origin_address):
-        matrix = get_distance_duration_matrix(destination_address, origin_address)
+        self.destination_address = destination_address
+        self.origin_address = origin_address
+        matrix = self.get_distance_duration_matrix()
         self.__distance = matrix[0]
         self.__duration = matrix[1]
 
@@ -23,8 +17,13 @@ class CommuteMatrix:
     def duration(self):
         return self.__duration
 
+    def get_distance_duration_matrix(self):
+        gmaps = googlemaps.Client(key='AIzaSyCpqCdiOg69YK9-tf2YOPLXRVXGxPuabPk')
+        matrix = gmaps.distance_matrix(self.origin_address, self.destination_address, transit_mode="walking")
+        return matrix["rows"][0]["elements"][0]["distance"]["value"], matrix["rows"][0]["elements"][0]["duration"]["value"]
 
-class DetailsHouse:
+
+class House:
     def __init__(self, box):
         ad_a = box.find("a")
         address_full = ad_a.text
