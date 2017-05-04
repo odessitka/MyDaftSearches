@@ -1,13 +1,20 @@
 import googlemaps
 
+dart_stations = ["Grand Canal Dock Train Station","Lansdowne Road Train Station", "Sandymount Train Station",
+                "Sydney Parade Train Station", "Blackrock Train Station","Booterstown Train Station",
+                "Seapoint Train Station", "Salthill And Monkstown Train Station","Dun Laoghaire (Mallin) Station", "Sandycove & Glasthule Dart Station" ]
+
 
 class CommuteMatrix:
-    def __init__(self, destination_address, origin_address):
+    def __init__(self, origin_address, destination_address):
         self.destination_address = destination_address
         self.origin_address = origin_address
         matrix = self.get_distance_duration_matrix()
         self.__distance = matrix[0]
         self.__duration = matrix[1]
+        dart = self.get_dart_distance_matrix()
+        self.__time_to_dart = dart[0]
+        self.__near_by_dart = dart[1]
 
     @property
     def distance(self):
@@ -17,11 +24,29 @@ class CommuteMatrix:
     def duration(self):
         return self.__duration
 
+    @property
+    def time_to_dart(self):
+        return self.__time_to_dart
+
+    @property
+    def near_by_dart(self):
+        return self.__near_by_dart
+
     def get_distance_duration_matrix(self):
         gmaps = googlemaps.Client(key='AIzaSyCpqCdiOg69YK9-tf2YOPLXRVXGxPuabPk')
         matrix = gmaps.distance_matrix(self.origin_address, self.destination_address, transit_mode="walking")
         return matrix["rows"][0]["elements"][0]["distance"]["value"], matrix["rows"][0]["elements"][0]["duration"]["value"]
 
+    def get_dart_distance_matrix(self):
+        gmaps = googlemaps.Client(key='AIzaSyCpqCdiOg69YK9-tf2YOPLXRVXGxPuabPk')
+        matrix = gmaps.distance_matrix(self.origin_address, dart_stations, transit_mode="walking")
+
+        combined = dict(zip(dart_stations, matrix["rows"][0]["elements"]))
+        station_distances = enumerate(matrix["rows"][0]["elements"])
+        sorted_distances = sorted(station_distances, key=lambda x: x[1]["distance"]["value"])
+        index = sorted_distances[0][0]
+        return sorted_distances[0][1]["duration"]["value"], matrix["destination_addresses"][index]
+        # return
 
 class House:
     def __init__(self, box):
