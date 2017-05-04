@@ -14,7 +14,9 @@ def initialize_db():
     link TEXT,
     image TEXT,
     meters_walk_to_ov INTEGER,
-    time_walk_to_ov INTEGER)''')
+    time_walk_to_ov INTEGER,
+    time_walk_to_dart INTEGER,
+    dart_station TEXT)''')
     db.commit()
     db.close()
 
@@ -26,10 +28,11 @@ def insert_house(price, address, url, image):
     db.commit()
     db.close()
 
-def update_house(id, distance, duration):
+
+def update_house(id, distance, duration, distance_to_dart, near_by_dart):
     db = sqlite3.connect("daftinfo.sqlite")
     cur = db.cursor()
-    cur.execute("""UPDATE Houses SET meters_walk_to_ov = ?, time_walk_to_ov = ? WHERE id = ?""", (distance, duration, id))
+    cur.execute("""UPDATE Houses SET meters_walk_to_ov = ?, time_walk_to_ov = ?, time_walk_to_dart = ?, dart_station = ?  WHERE id = ?""", (distance, duration, distance_to_dart, near_by_dart, id))
     db.commit()
     db.close()
 
