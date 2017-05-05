@@ -12,9 +12,14 @@ class CommuteMatrix:
         matrix = self.get_distance_duration_matrix()
         self.__distance = matrix[0]
         self.__duration = matrix[1]
+        self.__sorting_time = matrix[2]
         dart = self.get_dart_distance_matrix()
         self.__time_to_dart = dart[0]
-        self.__near_by_dart = dart[1]
+        self.__dart_sorting = dart[1]
+        #cleaning address of Dart (near_by_dart) from extra information
+        self.__x =  dart[2]
+        self.__y = self.__x.split(",")
+        self.__near_by_dart = self.__y[0]
 
     @property
     def distance(self):
@@ -25,8 +30,16 @@ class CommuteMatrix:
         return self.__duration
 
     @property
+    def sorting_time(self):
+        return self.__sorting_time
+
+    @property
     def time_to_dart(self):
         return self.__time_to_dart
+
+    @property
+    def dart_sorting(self):
+        return self.__dart_sorting
 
     @property
     def near_by_dart(self):
@@ -35,7 +48,8 @@ class CommuteMatrix:
     def get_distance_duration_matrix(self):
         gmaps = googlemaps.Client(key='AIzaSyCpqCdiOg69YK9-tf2YOPLXRVXGxPuabPk')
         matrix = gmaps.distance_matrix(self.origin_address, self.destination_address, transit_mode="walking")
-        return matrix["rows"][0]["elements"][0]["distance"]["value"], matrix["rows"][0]["elements"][0]["duration"]["value"]
+        print(matrix)
+        return matrix["rows"][0]["elements"][0]["distance"]["value"], matrix["rows"][0]["elements"][0]["duration"]["text"], matrix["rows"][0]["elements"][0]["duration"]["value"]
 
     def get_dart_distance_matrix(self):
         gmaps = googlemaps.Client(key='AIzaSyCpqCdiOg69YK9-tf2YOPLXRVXGxPuabPk')
@@ -45,7 +59,7 @@ class CommuteMatrix:
         station_distances = enumerate(matrix["rows"][0]["elements"])
         sorted_distances = sorted(station_distances, key=lambda x: x[1]["distance"]["value"])
         index = sorted_distances[0][0]
-        return sorted_distances[0][1]["duration"]["value"], matrix["destination_addresses"][index]
+        return sorted_distances[0][1]["duration"]["text"], sorted_distances[0][1]["duration"]["value"], matrix["destination_addresses"][index]
         # return
 
 class House:
