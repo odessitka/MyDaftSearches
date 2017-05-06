@@ -9,7 +9,6 @@ url = "http://www.daft.ie/dublin-city/residential-property-for-rent/blackrock,bo
 one_view = "oneview, blackrock"
 
 
-
 def main():
     dbhelpers.initialize_db()
     extract_and_insert()
@@ -33,7 +32,8 @@ def calc_distances():
     addresses = dbhelpers.get_addresses()
     for (address, id) in addresses:
         matrix = HelperClasses.CommuteMatrix(address, one_view)
-        dbhelpers.update_house(id, matrix.distance, matrix.duration, matrix.sorting_time, matrix.time_to_dart, matrix.dart_sorting, matrix.near_by_dart)
+        dbhelpers.update_house(id, matrix.distance, matrix.duration, matrix.time_to_dart,
+                               matrix.dart_sorting, matrix.near_by_dart)
 
 
 def extract_and_insert():
@@ -61,7 +61,8 @@ def compose_html(houses):
     </colgroup>
     <tr><th>Time</th><th>Address</th><th>Price</th><th>Closest Dart</th><th>Walk to Dart</th></tr>"""
     for house in houses:
-        message += "<tr><td>{a}</td><td><a href={d}>{b}</a></td><td>{c}</td><td>{e}</td><td>{f}</td><tr>".format(a=str(house[0]), b=house[1], c=house[2], d=house[3], e=house[4], f=house[5])
+        message += "<tr><td>{a}</td><td><a href={d}>{b}</a></td><td>{c}</td><td>{e}</td><td>{f}</td><tr>".format(
+            a=str(house[0]), b=house[1], c=house[2], d=house[3], e=house[4], f=house[5])
     message += """</table>
     </body>
     </html>"""
