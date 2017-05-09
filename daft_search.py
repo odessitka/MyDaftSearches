@@ -5,9 +5,7 @@ import HelperClasses
 import webbrowser
 import os
 
-url = "http://www.daft.ie/dublin-city/residential-property-for-rent/blackrock,booterstown,dun-laoghaire,monkstown,sandymount/?s%5Bmxp%5D=1850&s%5Badvanced%5D=1&rental_tab_name=advanced-sf&searchSource=rental"
 one_view = "oneview, blackrock"
-
 
 def main():
     dbhelpers.initialize_db()
@@ -15,6 +13,8 @@ def main():
     calc_distances()
     filename = create_report()
     webbrowser.open_new_tab(filename)
+
+
 
 
 def create_report():
@@ -38,12 +38,19 @@ def calc_distances():
 
 def extract_and_insert():
     # Extract data from daft, clear it and insert into database
-    html_of_search = urllib.request.urlopen(url).read()
-    soup_of_search = BeautifulSoup(html_of_search, "lxml")
-    boxes = soup_of_search.find_all('div', "box")
-    for box in boxes:
-        house = HelperClasses.House(box)
-        dbhelpers.insert_house(house.price, house.address, house.url, house.image)
+    for i in [1, 20, 40, 60, 80, 100]:
+        url1 = "http://www.daft.ie/dublin-city/residential-property-for-rent/blackrock,booterstown,dun-laoghaire,monkstown,sandymount/?s%5Bmxp%5D=1850&s%5Badvanced%5D=1&rental_tab_name=advanced-sf&searchSource=rental"
+        if i == 1:
+            url = url1
+        else:
+            url = url1 + "&offset=" + str(i)
+        html_of_search = urllib.request.urlopen(url).read()
+        soup_of_search = BeautifulSoup(html_of_search, "lxml")
+        boxes = soup_of_search.find_all('div', "box")
+        if len(boxes) == 0: break
+        for box in boxes:
+            house = HelperClasses.House(box)
+            dbhelpers.insert_house(house.price, house.address, house.url, house.image)
 
 
 def compose_html(houses):
