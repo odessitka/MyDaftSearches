@@ -11,15 +11,13 @@ class CommuteMatrix:
         self.origin_address = origin_address
         matrix = self.get_distance_duration_matrix()
         self.__distance = matrix[0]
-        self.__duration = matrix[1]
-        self.__sorting_time = matrix[2]
+        self.__duration = int((matrix[0])*60/5000)
+        #self.__sorting_time = matrix[2]
         dart = self.get_dart_distance_matrix()
         self.__time_to_dart = dart[0]
         self.__dart_sorting = dart[1]
         #cleaning address of Dart (near_by_dart) from extra information
-        self.__x =  dart[2]
-        self.__y = self.__x.split(",")
-        self.__near_by_dart = self.__y[0]
+        self.__near_by_dart = dart[2].split(",")[0]
 
     @property
     def distance(self):
@@ -28,10 +26,6 @@ class CommuteMatrix:
     @property
     def duration(self):
         return self.__duration
-
-    @property
-    def sorting_time(self):
-        return self.__sorting_time
 
     @property
     def time_to_dart(self):
@@ -59,8 +53,8 @@ class CommuteMatrix:
         station_distances = enumerate(matrix["rows"][0]["elements"])
         sorted_distances = sorted(station_distances, key=lambda x: x[1]["distance"]["value"])
         index = sorted_distances[0][0]
-        return sorted_distances[0][1]["duration"]["text"], sorted_distances[0][1]["duration"]["value"], matrix["destination_addresses"][index]
-        # return
+        return sorted_distances[0][1]["distance"]["text"], sorted_distances[0][1]["distance"]["value"], matrix["destination_addresses"][index]
+        #return sorted_distances[0][1]["duration"]["text"], sorted_distances[0][1]["duration"]["value"], matrix["destination_addresses"][index]
 
 class House:
     def __init__(self, box):
